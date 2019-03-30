@@ -17,3 +17,8 @@ export class BusReportDataModel {
 export class BusReportViewDataModel {
   reports: BusReportModel[];
 }
+
+export class StatusModel {
+  status: string;
+  statusName: string;
+}

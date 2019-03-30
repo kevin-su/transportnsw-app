@@ -14,8 +14,8 @@
         <tbody>
           <tr *ngFor="let item of reportItem.busData">
             <td>{{item.busId}}</td>
-            <td>{{item.routeVariant}}</td>
-            <td>{{item.deviationFromTimetable}}</td>
+            <td [innerHTML]="item.routeVariant"></td>
+            <td>{{item.statusName}}</td>
           </tr>
         </tbody>
       </table>

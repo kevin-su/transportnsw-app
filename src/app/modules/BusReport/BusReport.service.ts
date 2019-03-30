@@ -3,15 +3,24 @@ import { HttpClient } from '@angular/common/http';
 import { filter, map } from 'rxjs/operators';
 import { BusReportDataModel, BusReportModel } from './BusReport.model';
 
+
 @Injectable()
 export class BusReportService {
   constructor(private http: HttpClient) { }
+
+  getData(){
+    return <BusReportModel[]>JSON.parse(sessionStorage.getItem('busReportData'));
+  }
+
   getReports() {
     const url = '/assets/bus-services-data.json';
     return this.http.get<BusReportDataModel>(url)
       .pipe(
         map((data) => {
-          return <BusReportModel[]>data.data
+          if (!this.getData()) {
+            sessionStorage.setItem('busReportData', JSON.stringify(<BusReportModel[]>data.data));
+          }
+          return this.getData()
             .map((item) => {
               item.busData = [];
               return item;
@@ -19,14 +28,9 @@ export class BusReportService {
         })
       );
   }
+
   getReportByOrg(org: string) {
-    const url = '/assets/bus-services-data.json';
-    return this.http.get<BusReportDataModel>(url)
-      .pipe(
-        map((data) => {
-          return <BusReportModel>data.data
-            .find(item => item.organisation === org);
-        })
-      );
+    return <BusReportModel>this.getData()
+      .find(item => item.organisation === org);
   }
 }
