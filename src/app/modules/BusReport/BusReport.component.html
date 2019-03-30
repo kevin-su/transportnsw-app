@@ -1,0 +1,24 @@
+<div class="bus-report">
+  <h1>Bus Report</h1>
+  <div *ngFor="let reportItem of viewData.reports">
+    <button type="button" (click)="handleViewReportBy(reportItem.organisation)">{{reportItem.organisation}} - {{reportItem.date}}</button>
+    <ng-container *ngIf="reportItem.busData.length">
+      <table class="bus-report-table">
+        <thead>
+          <tr>
+            <th>Bus ID</th>
+            <th>Route Variant</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of reportItem.busData">
+            <td>{{item.busId}}</td>
+            <td>{{item.routeVariant}}</td>
+            <td>{{item.deviationFromTimetable}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </ng-container>
+  </div>
+</div>
