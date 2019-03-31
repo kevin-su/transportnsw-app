@@ -8,8 +8,13 @@ import { BusReportDataModel, BusReportModel } from './BusReport.model';
 export class BusReportService {
   constructor(private http: HttpClient) { }
 
-  getData(){
+  getData() {
     return <BusReportModel[]>JSON.parse(sessionStorage.getItem('busReportData'));
+  }
+
+  saveData(data) {
+    sessionStorage.setItem('busReportData', JSON.stringify(<BusReportModel[]>data));
+    return data;
   }
 
   getReports() {
@@ -18,7 +23,7 @@ export class BusReportService {
       .pipe(
         map((data) => {
           if (!this.getData()) {
-            sessionStorage.setItem('busReportData', JSON.stringify(<BusReportModel[]>data.data));
+            this.saveData(<BusReportModel[]>data.data);
           }
           return this.getData()
             .map((item) => {
@@ -32,5 +37,19 @@ export class BusReportService {
   getReportByOrg(org: string) {
     return <BusReportModel>this.getData()
       .find(item => item.organisation === org);
+  }
+
+  postReportNotes(org: string, notes: string) {
+    let result;
+    this.saveData(<BusReportModel[]>this.getData()
+      .map((item) => {
+        if (item.organisation === org) {
+          item.notes = notes;
+          result = item;
+        }
+        return item;
+      }));
+
+    return result;
   }
 }

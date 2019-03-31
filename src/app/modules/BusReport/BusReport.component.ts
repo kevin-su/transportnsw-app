@@ -1,6 +1,14 @@
 import { Component, OnInit } from '@angular/core';
+import {
+  FormBuilder,
+  Validators
+} from '@angular/forms';
 import { BusReportService } from './BusReport.service';
-import { BusReportViewDataModel, StatusModel } from './BusReport.model';
+import {
+  BusReportViewDataModel,
+  BusReportViewModel,
+  StatusModel
+} from './BusReport.model';
 
 @Component({
   selector: 'bus-report',
@@ -8,10 +16,12 @@ import { BusReportViewDataModel, StatusModel } from './BusReport.model';
   styleUrls: ['./BusReport.component.scss']
 })
 export class BusReportComponent {
+  notesForm = [];
   viewData: BusReportViewDataModel = {
-    reports: []
+    reports: [] as BusReportViewModel[]
   }
   constructor(
+    private formBuilder: FormBuilder,
     private BusReportService: BusReportService
   ) {}
 
@@ -23,10 +33,22 @@ export class BusReportComponent {
     this.getReports();
   }
 
+  initForm(i, data) {
+    this.notesForm[i] = this.formBuilder.group({
+      notes: [data.notes || '', Validators.required]
+    });
+  }
+
   getReports() {
     this.BusReportService.getReports()
       .subscribe((data) => {
-        this.viewData.reports = data;
+        this.viewData.reports = data.map((item, i) => {
+          const newItem: BusReportViewModel = item;
+          newItem.isCollapsed = true;
+
+          this.initForm(i, newItem);
+          return newItem;
+        });
       });
   }
 
@@ -35,7 +57,12 @@ export class BusReportComponent {
     this.viewData.reports =
       this.viewData.reports.map((item) => {
         if (item.organisation === data.organisation) {
-          item.busData = this.getViewBusData(data.busData);
+          item.isCollapsed = !item.isCollapsed;
+          if (!item.isCollapsed) {
+            item.busData = this.getViewBusData(data.busData);
+          } else {
+            item.busData = [];
+          }
         }
         return item;
       });
@@ -44,7 +71,7 @@ export class BusReportComponent {
   getViewBusData(data) {
     return data.map((item) => {
       const routeVariant: string[] = item.routeVariant.split(' ');
-      routeVariant[0] = `<span>${routeVariant[0]}</span>`;
+      routeVariant[0] = `<span class="highlight">${routeVariant[0]}</span>`;
       item.routeVariant = routeVariant.join(' ');
       Object.assign(item, this.getStatus(item.deviationFromTimetable));
       return item;
@@ -81,5 +108,18 @@ export class BusReportComponent {
     }
 
     return result;
+  }
+
+  onSubmit(org: string, data) {
+    const updatedItem = this.BusReportService.postReportNotes(
+      org,
+      data.notes
+    );
+    this.viewData.reports = this.viewData.reports.map(function(item) {
+      if (updatedItem.organisation === item.organisation) {
+        item.notes = updatedItem.notes;
+      }
+      return item;
+    })
   }
 }

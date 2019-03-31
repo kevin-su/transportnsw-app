@@ -1,8 +1,13 @@
 <div class="bus-report">
   <h1>Bus Report</h1>
-  <div *ngFor="let reportItem of viewData.reports">
-    <button type="button" (click)="handleViewReportBy(reportItem.organisation)">{{reportItem.organisation}} - {{reportItem.date}}</button>
-    <ng-container *ngIf="reportItem.busData.length">
+  <div *ngFor="let reportItem of viewData.reports; index as i">
+    <div class="header">
+      <button type="button" class="btn-toggle" (click)="handleViewReportBy(reportItem.organisation)">
+        <h2 class="heading">{{reportItem.organisation}} - {{reportItem.date}}</h2>
+        <span class="chevron" [ngClass]="{'down':reportItem.isCollapsed}"></span>
+      </button>
+    </div>
+    <div class="collapse-ui" [ngClass]="{'is-show':!reportItem.isCollapsed}">
       <table class="bus-report-table">
         <thead>
           <tr>
@@ -14,11 +19,19 @@
         <tbody>
           <tr *ngFor="let item of reportItem.busData">
             <td>{{item.busId}}</td>
-            <td [innerHTML]="item.routeVariant"></td>
-            <td>{{item.statusName}}</td>
+            <td class="route" [innerHTML]="item.routeVariant|safe: 'html'"></td>
+            <td class="status is-{{item.status}}">{{item.statusName}}</td>
           </tr>
         </tbody>
       </table>
-    </ng-container>
+      <div class="notes">
+        <label>Notes:</label>
+        <p *ngIf="reportItem.notes">{{reportItem.notes}}</p>
+        <form *ngIf="!reportItem.notes" [formGroup]="notesForm[i]" (ngSubmit)="onSubmit(reportItem.organisation, notesForm[i].value)">
+          <textarea cols="30" rows="3" placeholder="enter notes" class="notes-textarea" formControlName="notes"></textarea>
+          <button type="submit" [disabled]="!notesForm[i].valid" class="btn-save">Save</button>
+        </form>
+      </div>
+    </div>
   </div>
 </div>
