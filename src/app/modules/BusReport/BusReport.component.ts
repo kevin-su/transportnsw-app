@@ -23,14 +23,16 @@ export class BusReportComponent {
   constructor(
     private formBuilder: FormBuilder,
     private BusReportService: BusReportService
-  ) {}
+  ) {
+
+  }
 
   ngOnInit() {
-    this.init();
+    return this.init();
   }
 
   init() {
-    this.getReports();
+    return this.getReports();
   }
 
   initForm(i, data) {
@@ -40,9 +42,9 @@ export class BusReportComponent {
   }
 
   getReports() {
-    this.BusReportService.getReports()
+    return this.BusReportService.getReports()
       .subscribe((data) => {
-        this.viewData.reports = data.map((item, i) => {
+        return this.viewData.reports = data.map((item, i) => {
           const newItem: BusReportViewModel = item;
           newItem.isCollapsed = true;
 

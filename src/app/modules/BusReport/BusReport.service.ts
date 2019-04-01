@@ -1,8 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { filter, map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { BusReportDataModel, BusReportModel } from './BusReport.model';
 
+// getBanners(): Observable<any[]> {
+//     return Observable.of(this.banners);
+// }
 
 @Injectable()
 export class BusReportService {
@@ -17,7 +21,7 @@ export class BusReportService {
     return data;
   }
 
-  getReports() {
+  getReports(): Observable<BusReportModel[]> {
     const url = '/assets/bus-services-data.json';
     return this.http.get<BusReportDataModel>(url)
       .pipe(

@@ -2,8 +2,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { Component, NgModule } from '@angular/core'
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { DomSanitizer } from '@angular/platform-browser'
-import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BusReportModule } from './modules/BusReport';
 
@@ -14,7 +12,7 @@ import { BusReportModule } from './modules/BusReport';
   imports: [
     BrowserModule,
     HttpClientModule,
-    AppRoutingModule,
+    // AppRoutingModule,
     CommonModule,
     BusReportModule
   ],
