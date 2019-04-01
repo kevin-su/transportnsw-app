@@ -12,7 +12,7 @@ For save notes, I used window session to store entered notes.
 ### Show Status colour
 base on the design image and json data, I guessed the logic as follow, 
 
-if is null is "Unkown", 
-if is negative number is "Early", 
-if is positive number and less than 300 is "On Time", 
-if is over 300 is "Late",
+- if is null is "Unkown", 
+- if is negative number is "Early", 
+- if is positive number and less than 300 is "On Time", 
+- if is over 300 is "Late",
