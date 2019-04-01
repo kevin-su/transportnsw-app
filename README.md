@@ -9,7 +9,7 @@ in initial load would load summary of each organisation without its busData,
 busData would be load after use expanded organisation report view, then get busData, show table. 
 For save notes, I used window session to store entered notes.
 
-###Show Status colour
+### Show Status colour
 base on the design image and json data, I guessed the logic as follow, 
 
 if is null is "Unkown", 
